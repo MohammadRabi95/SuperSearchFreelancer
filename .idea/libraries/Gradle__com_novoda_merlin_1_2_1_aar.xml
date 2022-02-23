@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.novoda:merlin:1.2.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a837057a424733191ff9af6b71cfa8aa/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a837057a424733191ff9af6b71cfa8aa/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a837057a424733191ff9af6b71cfa8aa/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

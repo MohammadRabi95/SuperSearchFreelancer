@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1080600821948",
+    "firebase_url": "https://aloneproject-c1ec8.firebaseio.com",
+    "project_id": "aloneproject-c1ec8",
+    "storage_bucket": "aloneproject-c1ec8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080600821948:android:6b67540ef73405f48a10b9",
+        "android_client_info": {
+          "package_name": "com.itsoft.site.blocker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080600821948-c017ubv3qgqgh81l70j13bqv7ijp3vqu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm9FOtU6bPLdxYrNESgdd0-rO5rsAJQNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080600821948-c017ubv3qgqgh81l70j13bqv7ijp3vqu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
