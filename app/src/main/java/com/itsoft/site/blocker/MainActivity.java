@@ -17,6 +17,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -41,7 +42,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements VoiceRecognizerInterface {
     private WebView webView;
     String url = "https://www.google.co.uk/";
-    LinearLayout reload, filter, back, forward,home,microphone;
+    LinearLayout reload, filter, back, forward, home, microphone;
     TextView webUrl;
     RelativeLayout progress;
     boolean isFilterEnabled = true;
@@ -81,35 +82,61 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
         webView.setWebViewClient(webViewClient);
         webView.loadUrl(url);
 
-        reload.setOnClickListener(v -> { reset(); webView.loadUrl(GetSearchUrl(ignoredValue)); });
+        reload.setOnClickListener(v -> {
+            reset();
+            webView.loadUrl(GetSearchUrl(ignoredValue));
+        });
 
-        back.setOnClickListener(v -> { if (webView.canGoBack()) { webView.goBack(); } });
+        back.setOnClickListener(v -> {
+            if (webView.canGoBack()) {
+                webView.goBack();
+            }
+        });
 
-        forward.setOnClickListener(v -> { if (webView.canGoForward()) { webView.goForward(); } });
+        forward.setOnClickListener(v -> {
+            if (webView.canGoForward()) {
+                webView.goForward();
+            }
+        });
 
-        home.setOnClickListener(v -> { webView.clearHistory(); reset(); webView.loadUrl("https://www.google.co.uk/"); });
+        home.setOnClickListener(v -> {
+            webView.clearHistory();
+            reset();
+            webView.loadUrl("https://www.google.co.uk/");
+        });
 
         filterSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) { isFilterEnabled = true; hmm("Filter on");
+            if (isChecked) {
+                isFilterEnabled = true;
+                hmm("Filter on");
+            } else {
+                isFilterEnabled = false;
+                hmm("Filter off");
             }
-            else { isFilterEnabled = false; hmm("Filter off"); }
         });
 
         adblockSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
             if (isChecked) {
                 AdBlocker.init(this);
-                isAdBlockingEnabled = "0"; hmm("ads off"); }
-            else {
-                isAdBlockingEnabled = "1"; hmm("ads on"); }
+                isAdBlockingEnabled = "0";
+                hmm("ads off");
+            } else {
+                isAdBlockingEnabled = "1";
+                hmm("ads on");
+            }
         });
 
         microphone.setOnClickListener(v -> {
             requestRecordAudioPermission();
         });
+
     }
 
-    void reset() { urlFinished = ""; doHide = true; }
+    void reset() {
+        urlFinished = "";
+        doHide = true;
+    }
 
     void hmm(String msg) {
 //        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -120,24 +147,24 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     private WebViewClient webViewClient = new WebViewClient() {
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String  url) {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
         }
 
 
         private Map<String, Boolean> loadedUrls = new HashMap<>();
+
         @Nullable
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             boolean ad;
-            Log.e("shouldInterceptRequest:"," Called" );
-            if (adblockSwitch.isChecked()){
+            Log.e("shouldInterceptRequest:", " Called");
+            if (adblockSwitch.isChecked()) {
                 if (!loadedUrls.containsKey(url)) {
                     ad = AdBlocker.isAd(url);
                     loadedUrls.put(url, ad);
-                }
-                else {
+                } else {
                     ad = loadedUrls.get(url);
                 }
                 return ad ? AdBlocker.createEmptyResource() :
@@ -152,25 +179,19 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
         public void onPageFinished(WebView view, String url) {
 
 
-            if (!urlFinished.equals(url))
-
-            {
-                if (!url.toLowerCase().replace("webhp","").equals("https://www.google.co.uk/"))
-
-                {
-                    if(url.contains("https://www.google.co"))
-
-                    {
+            if (!urlFinished.equals(url)) {
+                if (!url.toLowerCase().replace("webhp", "").equals("https://www.google.co.uk/")) {
+                    if (url.contains("https://www.google.co")) {
                         webView.loadUrl("javascript:(" +
                                 "setTimeout(()=>{" +
                                 "var allElement=document.getElementsByClassName('gLFyf')[0].value;" +
                                 "if(allElement.length > 0)" +
                                 "{" +
-                                "console.log(allElement);"+
-                                "var filterText = allElement.replace(' -\"jobs\"', '');"+
-                                "console.log(filterText);"+
+                                "console.log(allElement);" +
+                                "var filterText = allElement.replace(' -\"jobs\"', '');" +
+                                "console.log(filterText);" +
 //                                "sb.LoadCheck(filterText);"+
-                                "document.getElementsByClassName('gLFyf')[0].value = filterText;"+
+                                "document.getElementsByClassName('gLFyf')[0].value = filterText;" +
                                 "}" +
                                 ";}, 1000))");
 
@@ -179,18 +200,16 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                                 "var allElement=document.getElementsByClassName('D0h3Gf')[0].value;" +
                                 "if(allElement.length > 0)" +
                                 "{" +
-                                "console.log(allElement);"+
-                                "var filterText = allElement.replace(' -\"jobs\"', '');"+
-                                "console.log(filterText);"+
+                                "console.log(allElement);" +
+                                "var filterText = allElement.replace(' -\"jobs\"', '');" +
+                                "console.log(filterText);" +
 //                                "sb.LoadCheck(filterText);"+
-                                "document.getElementsByClassName('D0h3Gf')[0].value = filterText;"+
+                                "document.getElementsByClassName('D0h3Gf')[0].value = filterText;" +
                                 "}" +
                                 ";}, 1000))");
                     }
 
-                    if (url.contains("https://www.google."))
-
-                    {
+                    if (url.contains("https://www.google.")) {
                         webView.loadUrl("javascript:(" +
                                 "setInterval(()=>{" +
                                 "var filter='" + filterValue + "'; " +
@@ -213,12 +232,12 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                                 "}" +
                                 "}" +
                                 "}" +
-                                "sb.LoadCheck(isAd.length);"+
+                                "sb.LoadCheck(isAd.length);" +
                                 "if(isAd.length > 0 && ad != 1){ " +
                                 "for(var m=0;m<isAd.length;m++)" +
                                 "{" +
-                                "isAd[m].style.display = 'none';"+
-                                "sb.LoadCheck('hide');"+
+                                "isAd[m].style.display = 'none';" +
+                                "sb.LoadCheck('hide');" +
                                 "}" +
                                 "}" +
                                 "for(var k=0;k<allElementSearchFor.length;k++)" +
@@ -234,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                                 "if(isTitle.length > 0 && ad != 1){ " +
                                 "for(var d=0;d<isTitle.length;d++)" +
                                 "{" +
-                                "isTitle[d].style.display = 'none';"+
+                                "isTitle[d].style.display = 'none';" +
                                 "}" +
                                 "}" +
                                 ";}, 1000))");
@@ -258,13 +277,14 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                                 ";}, 100))");
 
                         new Handler(Looper.getMainLooper()).postDelayed(() -> setVisibility(), 2200);
+                    } else {
+                        setVisibility();
                     }
 
-                    else {setVisibility();}
-
+                } else {
+                    setVisibility();
+                    reset();
                 }
-
-                else {setVisibility();reset();}
 
             }
 
@@ -272,14 +292,21 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
         }
 
         private static final String TAG = "MainActivity";
+
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
             progress.setVisibility(View.VISIBLE);
 
-            if(url.contains("https://www.google.co"))
+            if (url.contains("https://www.google.co")) {
 
-            {
+//                view.evaluateJavascript("(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
+//                        value -> {
+//                            Log.d("onReceiveValueCheck:", value+" Client");
+////                            if (value.contains("www.bark.com")) {
+////                                Log.d(TAG, "onReceiveValue: " + value);
+////                            }
+//                        });
 
 //                webView.loadUrl("javascript:(" +
 //                        "setTimeout(()=>{" +
@@ -307,14 +334,11 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                         ";}, 10))");
             }
 
-            if(url.contains("https://www.google.co.uk/search?q=") && doHide)
-
-            {
+            if (url.contains("https://www.google.co.uk/search?q=") && doHide) {
                 String[] hmm = url.split("=");
-                String keyword = hmm[1].split("&")[0].replaceAll("\\+", " ").replace("#ip","").toLowerCase();
-                if(!keyword.contains("jobs"))
-                {
-                    webView.loadUrl("https://www.google.co.uk/search?q=" + keyword.replace(" ","+") + " -\"jobs\"");
+                String keyword = hmm[1].split("&")[0].replaceAll("\\+", " ").replace("#ip", "").toLowerCase();
+                if (!keyword.contains("jobs")) {
+                    webView.loadUrl("https://www.google.co.uk/search?q=" + keyword.replace(" ", "+") + " -\"jobs\"");
                     doHide = false;
                 }
             }
@@ -324,25 +348,31 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
         }
     };
 
-    void setVisibility() { progress.setVisibility(View.GONE); }
+    void setVisibility() {
+        progress.setVisibility(View.GONE);
+    }
 
     private final WebChromeClient webChromeClient = new WebChromeClient() {
 
         @Override
-        public void onProgressChanged(WebView view, int newProgress) { }
+        public void onProgressChanged(WebView view, int newProgress) {
+        }
     };
 
     @Override
-    public void onBackPressed()
-
-    {
+    public void onBackPressed() {
         WebBackForwardList list = webView.copyBackForwardList();
         int cIndex = list.getCurrentIndex();
-        if (list.getCurrentItem().getUrl().contains("-%22jobs%22"))
-        {
-            webView.goBackOrForward(-2); reset();
+        if (list.getCurrentItem().getUrl().contains("-%22jobs%22")) {
+            webView.goBackOrForward(-2);
+            reset();
+        } else {
+            if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                super.onBackPressed();
+            }
         }
-        else { if (webView.canGoBack()) { webView.goBack(); } else { super.onBackPressed(); } }
     }
 
     @Override
@@ -355,13 +385,14 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     private void finishedPage(String url, String title) {
         webUrl.setText(url);
 
-        if (url.split("=").length > 1)
-
-        {
+        if (url.split("=").length > 1) {
             String[] hmm = url.split("=");
-            String thisSearch = hmm[1].split("&")[0].replaceAll("\\+", " ").replaceAll("%20"," ");
+            String thisSearch = hmm[1].split("&")[0].replaceAll("\\+", " ").replaceAll("%20", " ");
 
-            if(!ignoredValue.equals(thisSearch)) {  Log.d("--------reset", thisSearch); reset(); }
+            if (!ignoredValue.equals(thisSearch)) {
+                Log.d("--------reset", thisSearch);
+                reset();
+            }
 
             ignoredValue = thisSearch.replace("-\"jobs\"", "").trim();
         }
@@ -369,23 +400,27 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     }
 
     @JavascriptInterface
-    public void CounterCheck(String value) {  }
+    public void CounterCheck(String value) {
+    }
 
     @JavascriptInterface
     public void LoadCheck(String value) {
         //Toast.makeText(MainActivity.this, value, Toast.LENGTH_SHORT).show();
-        Log.d("--------ad",value);
+        Log.d("--------ad", value);
     }
 
-    String GetSearchUrl(String str) { return "https://www.google.co.uk/search?q=" + str.replace(" ", "+"); }
+    String GetSearchUrl(String str) {
+        return "https://www.google.co.uk/search?q=" + str.replace(" ", "+");
+    }
 
-    void loadFragment(){
+    void loadFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager != null && fragmentManager.findFragmentByTag("dialogVoiceRecognizer") == null && !isFinishing()) {
-            VoiceRecognizerFragment languageDialogFragment = new VoiceRecognizerFragment(this,this);
+            VoiceRecognizerFragment languageDialogFragment = new VoiceRecognizerFragment(this, this);
             languageDialogFragment.show(fragmentManager, "dialogVoiceRecognizer");
         }
     }
+
     private void requestRecordAudioPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String requiredPermission = Manifest.permission.RECORD_AUDIO;
