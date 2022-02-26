@@ -21,7 +21,8 @@
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <activity android:name=".splashActivity">
+        <activity android:name=".splashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -43,5 +44,10 @@
         </provider>
 
     </application>
+    <queries>
+        <intent >
+            <action android:name="android.speech.RecognitionService"/>
+        </intent>
+    </queries>
 
 </manifest>

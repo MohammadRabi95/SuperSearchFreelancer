@@ -26,7 +26,10 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebBackForwardList;
@@ -99,9 +102,11 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(this, "sb");
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setAppCacheEnabled(true);
 
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
 
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
@@ -157,27 +162,24 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
             requestRecordAudioPermission();
         });
 
-//        Search text
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
 
-            @SuppressLint("JavascriptInterface")
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//        edit text search
+        searchEditText.setOnKeyListener((v, keyCode, event) -> {
+
+            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                Log.e("onKey:", "CLick keyboard key");
                 String searchUrl = searchEditText.getText().toString().trim();
                 webView.loadUrl(GetSearchUrl(searchUrl));
-//                Toast.makeText(MainActivity.this, searchUrl, Toast.LENGTH_SHORT).show();
-
+                return true;
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            return false;
         });
+
+
+
+//        For file upload
 
 //        webView.setWebChromeClient(new WebChromeClient() {
 //
@@ -335,6 +337,24 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
 
         }
 
+
+        @Override
+        public void onPageCommitVisible(WebView view, String url) {
+
+            if (!url.contains("bark")){
+                webView.loadUrl("javascript:(setTimeout(()=>{console.log('link');" +
+                        "var link = document.getElementsByTagName('span');" +
+                        "for (let i = 0; i < link.length; i++) {" +
+                        "if  (link[i].textContent.includes('bark.com')) {" +
+                        "link[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = 'none'};" +
+                        "};" +
+                        "},1000))");
+            }
+
+
+            super.onPageCommitVisible(view, url);
+        }
+
         @Override
         public void onPageFinished(WebView view, String url) {
 
@@ -342,6 +362,13 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
             if (!urlFinished.equals(url)) {
                 if (!url.toLowerCase().replace("webhp", "").equals("https://www.google.co.uk/")) {
                     if (url.contains("https://www.google.co")) {
+
+                        Log.e("onPageCheckCall:"," Called" );
+
+                        webView.loadUrl("javascript:(setTimeout(()=>{document.getElementById('taw').style.display = 'none'}, 1000))");
+                    if (!url.contains("bark")) {
+
+
                         webView.loadUrl("javascript:(" +
                                 "setTimeout(()=>{" +
                                 "var allElement=document.getElementsByClassName('gLFyf')[0].value;" +
@@ -369,6 +396,8 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                                 ";}, 1000))");
                     }
 
+
+                    }
                     if (url.contains("https://www.google.")) {
                         webView.loadUrl("javascript:(" +
                                 "setInterval(()=>{" +
@@ -449,6 +478,15 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
             }
 
             urlFinished = url;
+
+            Log.d("onPageStarted:", "finish " + url);
+
+//            if (!(url.equalsIgnoreCase("https://www.google.co.uk/") ||
+//                    url.equalsIgnoreCase("https://www.google.co.uk/webhp") ||
+//                    url.equalsIgnoreCase("https://www.google.co.uk/search?q="))) {
+//                searchEditText.setText(url);
+//            }
+
         }
 
         private static final String TAG = "MainActivity";
@@ -505,6 +543,13 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
 
             finishedPage(url, webView.getTitle());
 
+            Log.d("onPageStarted:", "start " + url);
+
+            Log.e( "onPageStartedCheck","1 "+webView.getUrl());
+            Log.e( "onPageStartedCheck","2 "+url);
+            Log.e( "onPageStartedCheck","3 "+webView.getTitle());
+
+
         }
     };
 
@@ -513,7 +558,10 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     }
 
     private final WebChromeClient webChromeClient = new WebChromeClient() {
-
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            Log.d("CustomWebview", "onConsoleMessage: " + consoleMessage.message());
+            return true;
+        }
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
         }
@@ -605,10 +653,12 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
 
     @Override
     public void spokenText(String spokenText) {
-        Toast.makeText(this, spokenText, Toast.LENGTH_SHORT).show();
         webView.loadUrl(GetSearchUrl(spokenText));
+        Log.e("spokenText:", webView.getUrl());
+        searchEditText.setText(spokenText);
     }
 
+    //        For file upload
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 //        super.onActivityResult(requestCode, resultCode, intent);
