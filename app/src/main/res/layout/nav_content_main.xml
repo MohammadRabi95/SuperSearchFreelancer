@@ -22,6 +22,152 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:weightSum="4"
+                android:orientation="horizontal">
+
+
+
+                <LinearLayout
+                    android:id="@+id/forwardAndBackward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center|start"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:id="@+id/filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.5"
+                        android:visibility="gone">
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/filterSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="Filter"
+                            android:textColor="@color/white"
+                            android:theme="@style/SCBSwitch" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/space"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="horizontal"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/back"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="@dimen/_7sdp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:rotationY="180"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_arrow"
+                            app:tint="@color/white" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/forward"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_arrow"
+                            app:tint="@color/white" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/adblock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="33dp"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/adblockSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="ads "
+                        android:textColor="@color/white"
+                        android:theme="@style/SCBSwitch"
+                        android:thumb="@drawable/custom_thumb"
+                        app:showText="true"
+                        app:track="@drawable/custom_track" />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end|center"
+                    android:padding="7dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/reload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/reload" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="7dp"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/home"
+                            app:tint="@color/white" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
 
@@ -40,7 +186,7 @@
                     android:textSize="14sp"
                     android:visibility="gone" />
 
-                <TextView
+                <EditText
                     android:id="@+id/search"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -49,13 +195,15 @@
                     android:background="@drawable/rounded_edge_search"
                     android:drawablePadding="10dp"
                     android:hint="Search"
-                    android:padding="5dp"
+                    android:selectAllOnFocus="true"
+                    android:padding="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/colorPrimary"
                     android:textSize="14sp"
                     android:visibility="visible"
                     app:drawableLeftCompat="@drawable/ic_google" />
+
 
 
                 <LinearLayout
@@ -63,134 +211,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal"
                     android:visibility="visible">
 
 
                     <ImageView
-                        android:layout_width="17dp"
-                        android:layout_height="17dp"
-                        android:scaleType="centerInside"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_microphone" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/reload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/reload" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/home"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginEnd="7dp"
-                    android:layout_marginStart="7dp"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/home"
-                        app:tint="@color/white" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:gravity="center_vertical"
-                android:padding="5dp">
-
-                <LinearLayout
-                    android:id="@+id/filter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:visibility="gone">
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/filterSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Filter"
-                        android:textColor="@color/white"
-                        android:theme="@style/SCBSwitch" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/adblock"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:visibility="visible">
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/adblockSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="ads"
-                        android:textColor="@color/white"
-                        android:theme="@style/SCBSwitch" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/space"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/back"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:rotationY="180"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_arrow"
-                        app:tint="@color/white" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/forward"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_arrow"
-                        app:tint="@color/white" />
 
                 </LinearLayout>
 

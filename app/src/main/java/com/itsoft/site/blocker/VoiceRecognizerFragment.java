@@ -3,6 +3,8 @@ package com.itsoft.site.blocker;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -22,7 +24,7 @@ import java.util.Locale;
 public class VoiceRecognizerFragment extends DialogFragment implements RecognitionListener {
     ImageView imageView;
     TextView speak;
-    Button done;
+//    Button done;
     int i=0;
 
 
@@ -51,9 +53,12 @@ public class VoiceRecognizerFragment extends DialogFragment implements Recogniti
         {
             imageView=view.findViewById(R.id.image_voice_input);
             speak=view.findViewById(R.id.speak_voice_input_text);
-            done=view.findViewById(R.id.Done);
+//            done=view.findViewById(R.id.Done);
 
         }
+
+        view.setBackground(new ColorDrawable(Color.TRANSPARENT));
+
 
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -69,21 +74,21 @@ public class VoiceRecognizerFragment extends DialogFragment implements Recogniti
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
                 context.getPackageName());
         imageView.setOnClickListener(v -> {
-            done.setVisibility(View.VISIBLE);
+//            done.setVisibility(View.VISIBLE);
             startListening();
 
 
         });
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSpeechRecognizer.stopListening();
-                mSpeechRecognizer.destroy();
-                getActivity().getSupportFragmentManager().beginTransaction().remove(VoiceRecognizerFragment.this).commit();
-                done.setVisibility(View.GONE);
-
-            }
-        });
+//        done.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mSpeechRecognizer.stopListening();
+//                mSpeechRecognizer.destroy();
+//                getActivity().getSupportFragmentManager().beginTransaction().remove(VoiceRecognizerFragment.this).commit();
+//                done.setVisibility(View.GONE);
+//
+//            }
+//        });
 
         return view;
 
@@ -167,6 +172,8 @@ public class VoiceRecognizerFragment extends DialogFragment implements Recogniti
         mSpeechRecognizer.stopListening();
         mSpeechRecognizer.destroy();
         startListening();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(VoiceRecognizerFragment.this).commit();
+
         /*this.dismiss();*/
     }
 
