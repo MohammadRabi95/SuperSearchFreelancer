@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -26,8 +27,10 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -104,15 +107,20 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
         webView.addJavascriptInterface(this, "sb");
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setSupportZoom(true);
+        webView.setInitialScale(1);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
 
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollbarFadingEnabled(false);
 
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
         webView.loadUrl(url);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
 
         reload.setOnClickListener(v -> {
             reset();
@@ -301,7 +309,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     }
 
     void hmm(String msg) {
-//        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
         reset();
         webView.loadUrl(GetSearchUrl(ignoredValue));
     }
@@ -366,7 +373,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                         "},1000))");
             }
 
-
             super.onPageCommitVisible(view, url);
         }
 
@@ -378,10 +384,7 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                 if (!url.toLowerCase().replace("webhp", "").equals("https://www.google.co.uk/")) {
                     if (url.contains("https://www.google.co")) {
 
-                        Log.e("onPageCheckCall:", " Called");
-
                         if (!url.contains("bark")) {
-
 
                             webView.loadUrl("javascript:(" +
                                     "setTimeout(()=>{" +
@@ -492,9 +495,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
             }
 
             urlFinished = url;
-
-            Log.d("onPageStarted:", "finish " + url);
-
         }
 
         private static final String TAG = "MainActivity";
@@ -720,6 +720,7 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     }
 
     String GetSearchUrl(String str) {
+
         return "https://www.google.co.uk/search?q=" + str.replace(" ", "+") + "&num=20";
     }
 
