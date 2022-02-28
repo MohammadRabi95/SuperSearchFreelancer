@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -26,8 +27,10 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -104,15 +107,20 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
         webView.addJavascriptInterface(this, "sb");
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setSupportZoom(true);
+        webView.setInitialScale(1);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
 
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollbarFadingEnabled(false);
 
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
         webView.loadUrl(url);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
 
         reload.setOnClickListener(v -> {
             reset();
@@ -301,7 +309,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     }
 
     void hmm(String msg) {
-//        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
         reset();
         webView.loadUrl(GetSearchUrl(ignoredValue));
     }
@@ -351,21 +358,20 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                         "},1000))");
             }
 
-//            if (!url.contains("job")){
-//                webView.loadUrl("javascript:(setTimeout(()=>{console.log('link2'); " +
-//                        "var span = document.getElementsByTagName('span');" +
-//                        "var div = document.getElementsByTagName('div');" +
-//                        "for(var i = 0; i < span.length; i ++) {" +
-//                        "if(span[i].textContent.includes('job')) {" +
-//                        "span[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = 'none'};" +
-//                        "};" +
-//                        "for(var i = 0; i < div.length; i ++) {" +
-//                        "if(div[i].textContent.includes('job')) {" +
-//                        "div[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = 'none'};" +
-//                        "};" +
-//                        "},1000))");
-//            }
-
+            if (!url.contains("job")){
+                webView.loadUrl("javascript:(setTimeout(()=>{console.log('link2'); " +
+                        "var span = document.getElementsByTagName('span');" +
+                        "var div = document.getElementsByTagName('div');" +
+                        "for(var i = 0; i < span.length; i ++) {" +
+                        "if(span[i].textContent.includes('job')) {" +
+                        "span[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = 'none'};" +
+                        "};" +
+                        "for(var i = 0; i < div.length; i ++) {" +
+                        "if(div[i].textContent.includes('job')) {" +
+                        "div[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = 'none'};" +
+                        "};" +
+                        "},1000))");
+            }
 
             super.onPageCommitVisible(view, url);
         }
@@ -378,11 +384,7 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                 if (!url.toLowerCase().replace("webhp", "").equals("https://www.google.co.uk/")) {
                     if (url.contains("https://www.google.co")) {
 
-                        Log.e("onPageCheckCall:", " Called");
-
-                        webView.loadUrl("javascript:(setTimeout(()=>{document.getElementById('taw').style.display = 'none'}, 1000))");
                         if (!url.contains("bark")) {
-
 
                             webView.loadUrl("javascript:(" +
                                     "setTimeout(()=>{" +
@@ -493,15 +495,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
             }
 
             urlFinished = url;
-
-            Log.d("onPageStarted:", "finish " + url);
-
-//            if (!(url.equalsIgnoreCase("https://www.google.co.uk/") ||
-//                    url.equalsIgnoreCase("https://www.google.co.uk/webhp") ||
-//                    url.equalsIgnoreCase("https://www.google.co.uk/search?q="))) {
-//                searchEditText.setText(url);
-//            }
-
         }
 
         private static final String TAG = "MainActivity";
@@ -512,14 +505,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
             progress.setVisibility(View.VISIBLE);
 
             if (url.contains("https://www.google.co")) {
-
-//                view.evaluateJavascript("(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
-//                        value -> {
-//                            Log.d("onReceiveValueCheck:", value+" Client");
-////                            if (value.contains("www.bark.com")) {
-////                                Log.d(TAG, "onReceiveValue: " + value);
-////                            }
-//                        });
 
 //                webView.loadUrl("javascript:(" +
 //                        "setTimeout(()=>{" +
@@ -551,21 +536,9 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
                 String[] hmm = url.split("=");
                 String keyword = hmm[1].split("&")[0].replaceAll("\\+", " ")
                         .replace("#ip", "").toLowerCase();
-                if (!keyword.contains("jobs")) {
-//                    webView.loadUrl("https://www.google.co.uk/search?q=" + keyword
-//                            .replace(" ", "+") + " -\"jobs\"");
-                    doHide = false;
-                }
             }
 
             finishedPage(url, webView.getTitle());
-
-            Log.d("onPageStarted:", "start " + url);
-
-            Log.e("onPageStartedCheck", "1 " + webView.getUrl());
-            Log.e("onPageStartedCheck", "2 " + url);
-            Log.e("onPageStartedCheck", "3 " + webView.getTitle());
-
 
         }
     };
@@ -747,7 +720,8 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     }
 
     String GetSearchUrl(String str) {
-        return "https://www.google.co.uk/search?q=" + str.replace(" ", "+");
+
+        return "https://www.google.co.uk/search?q=" + str.replace(" ", "+") + "&num=20";
     }
 
     void loadFragment() {
@@ -761,9 +735,6 @@ public class MainActivity extends AppCompatActivity implements VoiceRecognizerIn
     private void requestRecordAudioPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String requiredPermission = Manifest.permission.RECORD_AUDIO;
-
-            // If the user previously denied this permission then show a message explaining why
-            // this permission is needed
             if (checkCallingOrSelfPermission(requiredPermission) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(new String[]{requiredPermission}, 101);
             } else {
