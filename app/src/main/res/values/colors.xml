@@ -307,5 +307,6 @@
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>
     <color name="black">#000000</color>
+    <color name="transparent_color">#00000000</color>
 
 </resources>
