@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
@@ -46,6 +47,7 @@ public class VoiceRecognizerFragment extends DialogFragment implements Recogniti
 
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +59,8 @@ public class VoiceRecognizerFragment extends DialogFragment implements Recogniti
 
         }
 
-        view.setBackground(new ColorDrawable(Color.TRANSPARENT));
+//        view.setBackground(new ColorDrawable(Color.TRANSPARENT));
+
 
 
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
